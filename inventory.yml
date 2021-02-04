@@ -1,0 +1,27 @@
+---
+proxmox:
+  hosts:
+    # Add each FQDN for each proxmox machine you want to have working certs for
+    # This list should match crt_subject_alt_name
+    proxmox.your-domain.site
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+all:
+  vars:
+    # You probably don't need to change this
+    certs_path: ./.lets-encrypt
+    # This probably should be the domain name you own
+    crt_common_name: your-domain.site
+    # Add each FQDN for each proxmox machine you want to have working certs for
+    # Cloudflare doesn't need to know about these FQDNs
+    crt_subject_alt_name:
+      - proxmox.your-domain.site
+    # I'm not sure how this differs to crt_common_name
+    cf_zone: your-domain.site
+    # This is the email address you use to log into cloudflare
+    cf_account_email: your-email-address@gmail.com
+    # This is the Global API Key found on the API Tokens page, not the Zone ID
+    # or Account ID. There's probably a better choice of API key but the less
+    # time I spend dealing with DNS nonsense the better
+    cf_account_api_token: GLOBAL_API_KEY_HERE

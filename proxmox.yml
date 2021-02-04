@@ -1,0 +1,21 @@
+- hosts: proxmox
+  become: true
+
+  tasks:
+  - name: Copy SSL certificate to proxmox
+    copy:
+      dest: /etc/pve/local/pve-ssl.pem
+      src: "{{ certs_path }}/{{ crt_common_name }}.crt"
+      follow: yes
+    register: sslcert
+
+  - name: Copy SSL key to proxmox
+    copy:
+      dest: /etc/pve/local/pve-ssl.key
+      src: "{{ certs_path }}/{{ crt_common_name }}.pem"
+      follow: yes
+    register: sslkey
+
+  - name: Restart pveproxy when certs change
+    service: name=pveproxy state=restarted
+    when:  sslcert.changed or sslkey.changed
